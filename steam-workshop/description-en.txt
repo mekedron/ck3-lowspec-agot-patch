@@ -14,7 +14,7 @@ Two files: AGOT's terrain and water shaders with the two mods' changes applied o
 
 [h2]Snow on the AGOT map[/h2]
 
-AGOT's snow mask is one colour over the whole map with the red channel at 255, which the snow material reads as "no snow allowed anywhere": on the AGOT map the material never runs, and Real Snow showed AGOT's flat procedural snow instead. This patch ships a mask with vanilla's noise and red at 0, so the snow material runs and is gated by the winter severity the game computes per province. If you also use AGOT Performance Patch, load it above this one.
+Real Snow has no effect here, on purpose: AGOT's snow mask texture is one colour with the red channel at 255, which the snow material reads as "no snow allowed anywhere", and a replacement mask still showed no snow. So this patch always draws AGOT's own procedural snow and does not spend the snow material's texture reads on that map.
 
 [h2]Load order[/h2]
 
@@ -43,7 +43,7 @@ Requires all three of AGOT, Sharp Terrain and Better Water.
 
 [h2]Compatibility[/h2]
 
-Replaces gfx/FX/pdxterrain.shader, gfx/FX/pdxwater.shader and gfx/map/textures/snow_mask.dds in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
+Replaces gfx/FX/pdxterrain.shader and gfx/FX/pdxwater.shader in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
 
 [h2]Source[/h2]
 

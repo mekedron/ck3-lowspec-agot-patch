@@ -5,10 +5,10 @@
 # AGOT's terrain shader is kept as is (its atmospheric fog, snowfall and the extra
 # arguments of its snow functions), and the low spec path of "Sharp Terrain Without
 # Advanced Shaders" is added on top, exactly as in that mod:
-#   * "sharp_terrain_options.fxh" is included first; it comes from Sharp Terrain (or
-#     from the Real Snow add-on, which overrides it), so TERRAINOPT_SNOW_MATERIAL works
-#   * new function ApplySnowMaterialTerrainCheap (Sharp Terrain 1.2's cheap snow material,
-#     with AGOT's snow texture index AGOT_SNOW_TEX_INDEX)
+#   * "sharp_terrain_options.fxh" is included first, as in Sharp Terrain; its
+#     TERRAINOPT_SNOW_MATERIAL option (the Real Snow add-on) is read but NOT acted on:
+#     AGOT's snow mask disables the snow material everywhere, so the low spec shader
+#     always draws AGOT's own procedural snow
 #   * new MainCode PixelShaderLowSpecSharp - Sharp Terrain's per pixel low spec terrain,
 #     with two calls changed to AGOT's versions:
 #       ApplyDynamicMasksDiffuse( ..., 0, 0, 0.0f )          AGOT's terrain variant arguments
@@ -460,102 +460,6 @@ PixelShader =
 		// gfx/FX/sharp_terrain_options.fxh, so that an add-on mod can switch it on by
 		// overriding that single file.
 
-		// TERRAINOPT_SNOW_MATERIAL_VANILLA is not defined here either: with the snow
-		// option on, the low spec shader draws the cheap snow material below; that define
-		// (options file, or shader_debug) switches it to vanilla's ApplySnowMaterialTerrain.
-
-		// The vanilla snow material (dynamic_masks.fxh, ApplySnowMaterialTerrain) at a low
-		// spec price. Same masks, same height blend, same frost layer, same look up close;
-		// what goes: the sine noise and the derivative work of every SampleNoTile (five
-		// per pixel), and the second heightmap read for the mountain term, because the
-		// pixel shader already has the world height. The two mask lookups keep two reads
-		// each (averaged, see below), the three material lookups become one read each.
-		// About 9 texture reads per snow pixel instead of about 14 plus the noise math.
-		// The snow texture repeats at its tiling instead of being scrambled by the noise;
-		// on a near uniform white texture that is not visible.
-		void ApplySnowMaterialTerrainCheap( inout float4 Diffuse, inout float3 Normal, inout float4 Properties, float3 TerrainNormal, in float2 WorldSpacePosXz, in float WorldHeight, in float2 MapCoords, inout float HighlightMask )
-		{
-			// Snow data. "Never snow here" exits after one read, as in vanilla.
-			SSnowEffectData SnowEffectData;
-			SnowEffectData._NoSnowMask = 1.0f - PdxTex2D( SnowMaskMap, float2( MapCoords.x, 1.0f - MapCoords.y ) ).r;
-			if ( SnowEffectData._NoSnowMask < 0.05f )
-			{
-				HighlightMask = 0.0f;
-				return;
-			}
-			// GetSnowEffectData without the noise math and without GetHeight. Vanilla's
-			// SampleNoTile blends two samples of the mask taken at a per region random
-			// offset, and over most of the map that blend is a real mix of the two - which
-			// halves the mask's variance and is what keeps the snow cover closed. A single
-			// read has the full variance and opens holes in the cover, so two reads at fixed
-			// offsets are averaged instead: same statistics, no noise math.
-			float2 NoiseCoords = ( MapCoords + vec2( _SnowRandomNumber ) * 0.1f ) * _SnowNoiseTiling;
-			float4 SnowMaskColor = 0.5f * ( PdxTex2D( SnowMaskMap, NoiseCoords ) + PdxTex2D( SnowMaskMap, NoiseCoords + float2( 0.37f, 0.61f ) ) );
-			SnowEffectData._Noise = SnowMaskColor.b;
-			SnowEffectData._Noise3 = SnowMaskColor.g;
-			SnowEffectData._Noise2 = SnowMaskColor.b * SnowMaskColor.g;
-			SnowEffectData._SnowHemisphere = RemapClamped( 1.0f - MapCoords.y, 0.0f, 1.0f, 0.0f, 1.0f );
-			SnowEffectData._Height = RemapClamped( WorldHeight, _SnowTerrainHeightMin, _SnowTerrainHeightMax, 0.0f, 1.0f );
-
-			// Masks, as vanilla; the large scale noise averaged the same way
-			float Noise = 1.0f - 0.5f * ( PdxTex2D( SnowMaskMap, MapCoords * 5.0f ).a + PdxTex2D( SnowMaskMap, MapCoords * 5.0f + float2( 0.29f, 0.53f ) ).a );
-			float GameSnow = GetWinterSeverityValue( MapCoords );
-			float GameSnowMask = smoothstep( _SnowGameMaskMin, _SnowGameMaskMax, GameSnow ) * _SnowGameMaskImpact * Noise;
-			float Winter = GetWinterValue();
-			Winter = saturate( Winter + GameSnowMask - Winter * GameSnowMask );
-
-			float Snow = GetWinterMask( Winter, MapCoords, _SnowTerrainAreaPosition, _SnowTerrainAreaContrast, _SnowHemispherePosition, _SnowHemisphereContrast, SnowEffectData, GameSnowMask, GameSnowMask );
-			float Frost = GetWinterMask( Winter, MapCoords, _FrostTerrainAreaPosition, _FrostTerrainAreaContrast, _FrostHemispherePosition, _FrostHemisphereContrast, SnowEffectData, 0.0f, GameSnowMask );
-			float WinterSmoothstep = smoothstep( 0.0f, 0.1f, Winter );
-			Frost *= _FrostMultiplier * WinterSmoothstep;
-			Snow *= WinterSmoothstep;
-
-			if ( Snow < SKIP_VALUE && Frost < SKIP_VALUE )
-			{
-				HighlightMask = Snow;
-				return;
-			}
-			// Remove snow from steep angle
-			TerrainNormal.y = smoothstep( _SnowAngleRemove, 1.0f, abs( TerrainNormal.y ) );
-			Snow = lerp( 0.0f, Snow, TerrainNormal.y );
-			HighlightMask = Snow;
-
-			// The snow material: one plain read each instead of SampleNoTile
-			float2 SnowUV = CalcDetailUV( WorldSpacePosXz ) * _SnowTextureTiling;
-			float4 SnowDiffuse = PdxTex2D( DetailTextures, float3( SnowUV, AGOT_SNOW_TEX_INDEX ) );
-			float4 SnowNormalRRxG = PdxTex2D( NormalTextures, float3( SnowUV, AGOT_SNOW_TEX_INDEX ) );
-			float3 SnowNormal = UnpackRRxGNormal( SnowNormalRRxG ).xyz;
-			float4 SnowProperties = PdxTex2D( MaterialTextures, float3( SnowUV, AGOT_SNOW_TEX_INDEX ) );
-
-			// Terrain material blend, as vanilla
-			Diffuse.a = lerp( 0.0f, Diffuse.a, _SnowHeightWeight );
-			SnowDiffuse.a = 1.0f - lerp( 1.0f, SnowDiffuse.a, 1.0f - _SnowHeightWeight );
-			SnowDiffuse.a *= SnowEffectData._Noise3;
-			float2 BlendFactors = CalcHeightBlendFactors( float2( Diffuse.a, SnowDiffuse.a ), float2( 1.0f - Snow, Snow ), DetailBlendRange * _SnowHeightContrast * Snow );
-
-			// Initial Frost Layer
-			Diffuse = lerp( Diffuse, SnowDiffuse, Frost );
-			Normal = lerp( Normal, SnowNormal, Frost );
-			Properties = lerp( Properties, SnowProperties, Frost );
-
-			float BlendValue = BlendFactors.y;
-			BlendValue = 1 - pow( 1 - BlendValue, 5 );
-
-			// Add more details to the snow
-			float DetailAngleReduction = smoothstep( 0.0f, 0.02f, abs( Normal.y ) );
-			DetailAngleReduction = lerp( 0.5f, 0.0f, DetailAngleReduction );
-			DetailAngleReduction = clamp( DetailAngleReduction * Snow, 0.0f, 1.0f );
-			BlendValue = lerp( BlendValue, 0.0f, DetailAngleReduction );
-			BlendValue = BlendValue - smoothstep( 0.25f, 1.0f, SnowEffectData._Noise2 ) * 2.0f;
-			BlendValue = max( 0.000001f, BlendValue );
-
-			// Snow Layer
-			Diffuse = lerp( Diffuse, SnowDiffuse, BlendValue );
-			Normal = lerp( Normal, SnowNormal, BlendValue );
-			Properties = lerp( Properties, SnowProperties, BlendValue );
-		}
-
-
 		static const float UNDERWATER_CLIP_OFFSET = 0.00001f;
 		static const float TERRAIN_SKIRT_CLIP_OFFSET = 0.01f;
 		SLightingProperties GetFlatMapLerpSunLightingProperties( float3 WorldSpacePos, float ShadowTerm )
@@ -1002,20 +906,12 @@ PixelShader =
 				float SnowHighlight = 0.0f;
 				float3 Normal = CalculateNormal( Input.WorldSpacePos.xz );
 				#ifndef UNDERWATER
-					#ifdef TERRAINOPT_SNOW_MATERIAL
-						// The snow material blends into the detail height, normal and
-						// material as well, so snow gets its own normals and roughness,
-						// and SnowHighlight feeds the white highlight compensation below.
-						#ifdef TERRAINOPT_SNOW_MATERIAL_VANILLA
-							ApplySnowMaterialTerrain( DetailDiffuseHeight, DetailNormal, DetailMaterial, Normal, Input.WorldSpacePos.xz, ColorMapCoords, SnowHighlight );
-						#else
-							ApplySnowMaterialTerrainCheap( DetailDiffuseHeight, DetailNormal, DetailMaterial, Normal, Input.WorldSpacePos.xz, Input.WorldSpacePos.y, ColorMapCoords, SnowHighlight );
-						#endif
-						DetailDiffuse = DetailDiffuseHeight.rgb;
-					#else
-						// AGOT: terrain variant arguments (0, 0, 0.0f), as in AGOT's own PixelShaderLowSpec.
-						DetailDiffuse = ApplyDynamicMasksDiffuse( DetailDiffuse, Normal, ColorMapCoords, 0, 0, 0.0f );
-					#endif
+					// AGOT: always its own procedural snow, terrain variant arguments (0, 0, 0.0f)
+					// as in AGOT's PixelShaderLowSpec. The snow material of Sharp Terrain / Real
+					// Snow (TERRAINOPT_SNOW_MATERIAL) is deliberately not run here: AGOT ships a
+					// snow mask that tells the material "no snow anywhere", so it would exit
+					// after one texture read on every pixel and draw nothing.
+					DetailDiffuse = ApplyDynamicMasksDiffuse( DetailDiffuse, Normal, ColorMapCoords, 0, 0, 0.0f );
 				#endif
 
 				// Detail normal maps are sampled by CalculateDetails anyway, so using
