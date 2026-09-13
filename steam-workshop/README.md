@@ -43,7 +43,7 @@ The uploader form's own image field applies to Paradox Mods, not to Steam.
 ## Rebuilding the thumbnail
 
 `make_thumbnail.py` takes an AGOT-only screenshot and one with the mods and this patch, crops the same
-2120x1060 window out of both (chosen so that no HUD element — the pause label, the
+2120x853 window out of both (chosen so that no HUD element — the pause label, the
 resource bar, the portrait, the minimap, the right-hand icon column — is inside it),
 stacks them, and labels them BEFORE / AFTER.
 
@@ -55,7 +55,7 @@ resolution it needs adjusting.
 
 `thumbnail.png` in the repo root is 1024x1024, under Steam's 1 MB limit; it does not exist yet - the two screenshots have to be taken first (see `make_thumbnail.py`). It is
 quantised to a 256 colour palette — at this size the dither is invisible, and it is what
-keeps a full resolution square under the limit; a truecolour 1280x1280 comes out at 1.7 MB.
+keeps a full resolution square under the limit; a truecolour 1024x1024 comes out above it.
 
 The image is rebuilt from raw pixels, so it carries no PNG text chunks, no EXIF and no
 ICC profile from the source screenshots. Verify any replacement before committing it:
