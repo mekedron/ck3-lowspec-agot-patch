@@ -5,7 +5,8 @@
 # reach all of them.
 #
 # Changes vs AGOT, all inside GameApplyFogOfWar and guarded by AGOTOPT_* switches from
-# gfx/FX/agot_patch_options.fxh (included first, everything off there by default):
+# gfx/FX/agot_patch_options.fxh (included first; by default that file switches the
+# clouds and the cloud shadows off and keeps the fog of war darkness):
 #   AGOTOPT_FOW_2TAP           clouds and cloud shadow from one noise layer each (AGOT's own
 #                              LOW_QUALITY_SHADERS path): 2 taps of the 4096x4096 cloud
 #                              texture per pixel instead of 6
@@ -14,7 +15,8 @@
 #   AGOTOPT_NO_CLOUDS          no cloud layer (3 taps saved); fog of war darkness and cloud
 #                              shadows stay
 #   AGOTOPT_DIAG_NO_FOW        diagnostic: the whole pass returns the input colour
-# Every switch can also be tried live from the console: shader_debug AGOTOPT_NO_CLOUDS
+# The defaults can be undone live from the console, see the options file:
+#   shader_debug AGOTOPT_VANILLA_FOW / AGOTOPT_KEEP_CLOUDS / AGOTOPT_KEEP_CLOUD_SHADOW
 #
 # This file is based on fog_of_war.fxh from Victoria 3 v1.0.3.
 # It replaces the standard Jomini fog of war shader.

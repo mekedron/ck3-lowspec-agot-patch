@@ -56,18 +56,22 @@ alpha at the "high" camera range), and the cloud shadows are always on - AGOT se
 own cloud opacity to 0 and does its clouds here, so CK3's Cloud Shadows setting no
 longer switches them off.
 
-The patch ships AGOT's `agot_vic3_fog_of_war.fxh` with four switches, all off by
-default, in `gfx/FX/agot_patch_options.fxh`:
+The patch ships AGOT's `agot_vic3_fog_of_war.fxh` with switches in
+`gfx/FX/agot_patch_options.fxh`. **By default the cloud layer and the cloud shadows are
+off** and only the fog of war darkness over unexplored land is drawn: zero cloud taps
+per pixel instead of six. The switches are "keep" switches, so each default can be
+undone live from the console (`-debug_mode` launch option), one at a time:
 
-| switch | what it does |
+| console command | effect |
 | --- | --- |
-| `AGOTOPT_FOW_2TAP` | one noise layer each for clouds and cloud shadows (AGOT's own `LOW_QUALITY_SHADERS` path): 2 taps instead of 6, coarser cloud shapes |
-| `AGOTOPT_NO_CLOUD_SHADOW` | no cloud shadows on the map, 3 taps saved; fog of war darkness and clouds stay |
-| `AGOTOPT_NO_CLOUDS` | no cloud layer, 3 taps saved; fog of war darkness and cloud shadows stay |
-| `AGOTOPT_DIAG_NO_FOW` | diagnostic: the whole pass returns its input, for measuring what it costs |
+| `shader_debug AGOTOPT_VANILLA_FOW` | AGOT's fog of war exactly as shipped: clouds and shadows, 6 taps |
+| `shader_debug AGOTOPT_KEEP_CLOUDS` | the cloud layer back, from one noise layer (AGOT's own `LOW_QUALITY_SHADERS` path) |
+| `shader_debug AGOTOPT_KEEP_CLOUD_SHADOW` | the cloud shadows back, from one noise layer |
+| `shader_debug AGOTOPT_DIAG_NO_FOW` | diagnostic: the whole pass off, darkness included, to measure what it costs |
+| `shader_debug` | back to the defaults |
 
-Try one live from the console (`-debug_mode` launch option): `shader_debug
-AGOTOPT_NO_CLOUDS`; make it permanent by uncommenting its `#define` in the options file.
+To keep clouds or their shadows for good, uncomment the matching `#define` in the
+options file.
 
 ## Load order
 

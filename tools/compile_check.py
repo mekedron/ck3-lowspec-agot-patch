@@ -184,8 +184,8 @@ def main():
         ('default', switch_block(options), []),
         ('snow_material', switch_block(options), ['-DTERRAINOPT_SNOW_MATERIAL']),
         ('options_off', '', []),
-        ('fow_2tap', switch_block(options), ['-DAGOTOPT_FOW_2TAP']),
-        ('no_clouds', switch_block(options), ['-DAGOTOPT_NO_CLOUDS', '-DAGOTOPT_NO_CLOUD_SHADOW']),
+        ('vanilla_fow', switch_block(options), ['-DAGOTOPT_VANILLA_FOW']),
+        ('keep_clouds', switch_block(options), ['-DAGOTOPT_KEEP_CLOUDS', '-DAGOTOPT_KEEP_CLOUD_SHADOW']),
         ('diag_no_fow', switch_block(options), ['-DAGOTOPT_DIAG_NO_FOW']),
     ]
     work = tempfile.mkdtemp(prefix='agotpatch_')

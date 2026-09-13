@@ -33,7 +33,7 @@ Requires all three of AGOT, Sharp Terrain and Better Water.
 [*]Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
 [*]Safe to add or remove at any time, including mid-campaign
 [*]The first map load after enabling is slower: the two shaders are compiled and cached from scratch
-[*]Optional switches in gfx/FX/agot_patch_options.fxh (all off): AGOT's fog of war reads its 4096x4096 cloud texture six times per pixel on every surface at every zoom; the switches cut that to two taps, drop the cloud shadows, or drop the cloud layer
+[*]AGOT's cloud layer and cloud shadows are off by default: its fog of war reads a 4096x4096 cloud texture six times per pixel on every surface at every zoom for them. The fog of war darkness stays. Both can be brought back (from one noise layer) in gfx/FX/agot_patch_options.fxh
 [*]Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
 [/list]
 
