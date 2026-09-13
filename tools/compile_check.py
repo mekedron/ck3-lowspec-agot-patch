@@ -179,6 +179,7 @@ def main():
     VARIANTS = [
         ('default', switch_block(options), []),
         ('snow_material', switch_block(options), ['-DTERRAINOPT_SNOW_MATERIAL']),
+        ('snow_vanilla', switch_block(options), ['-DTERRAINOPT_SNOW_MATERIAL', '-DTERRAINOPT_SNOW_MATERIAL_VANILLA']),
         ('options_off', '', []),
     ]
     work = tempfile.mkdtemp(prefix='agotpatch_')
