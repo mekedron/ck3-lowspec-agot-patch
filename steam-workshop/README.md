@@ -19,7 +19,7 @@ BBCode version first, then regenerate, so the two never drift apart.
 
 ## Listing metadata
 
-* **Title:** Sharp Terrain & Better Water: A Game of Thrones Patch
+* **Title:** AGOT Patch for Sharp Terrain & Better Water
 * **Tags:** Fixes, Graphics, Utilities — same as `descriptor.mod`
 * **Version:** 1.0.0, `supported_version="1.19.*"`
 * **Visibility:** public

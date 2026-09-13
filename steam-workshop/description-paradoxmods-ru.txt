@@ -1,4 +1,4 @@
-Sharp Terrain & Better Water: A Game of Thrones Patch
+AGOT Patch for Sharp Terrain & Better Water
 
 Гайд: https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441 — полный список настроек, под который собраны эти моды, на ноутбучной видеокарте с 4 ГБ при 5120x1440.
 
@@ -20,7 +20,7 @@ AGOT везёт собственные копии шейдеров карты, �
 - Sharp Terrain Without Advanced Shaders
 - Real Snow Without Advanced Shaders (по желанию)
 - Better Water Without Advanced Shaders
-- Sharp Terrain & Better Water: A Game of Thrones Patch
+- AGOT Patch for Sharp Terrain & Better Water
 
 Требует все три: AGOT, Sharp Terrain и Better Water.
 

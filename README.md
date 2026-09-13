@@ -1,4 +1,4 @@
-# Sharp Terrain & Better Water: A Game of Thrones Patch (CK3)
+# AGOT Patch for Sharp Terrain & Better Water (CK3)
 
 A compatibility patch that makes
 [Sharp Terrain Without Advanced Shaders](https://github.com/mekedron/ck3-lowspec-terrain-fix)
@@ -62,7 +62,7 @@ The patch must be the lowest of the group:
     Sharp Terrain Without Advanced Shaders
     Real Snow Without Advanced Shaders            (optional)
     Better Water Without Advanced Shaders
-    Sharp Terrain & Better Water: A Game of Thrones Patch
+    AGOT Patch for Sharp Terrain & Better Water
 
 Requires all three of AGOT, Sharp Terrain and Better Water. The launcher's list is
 sorted by load order, first entry loads first; for files present in several mods the

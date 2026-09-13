@@ -1,4 +1,4 @@
-[h1]Sharp Terrain & Better Water: A Game of Thrones Patch[/h1]
+[h1]AGOT Patch for Sharp Terrain & Better Water[/h1]
 
 [b]Guide:[/b] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441]CK3 on a potato PC: a locked 60 FPS, and the map still looks sharp[/url] — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
@@ -21,7 +21,7 @@ The patch must be the lowest of the group:
 [*]Sharp Terrain Without Advanced Shaders
 [*]Real Snow Without Advanced Shaders (optional)
 [*]Better Water Without Advanced Shaders
-[*]Sharp Terrain & Better Water: A Game of Thrones Patch
+[*]AGOT Patch for Sharp Terrain & Better Water
 [/list]
 
 Requires all three of AGOT, Sharp Terrain and Better Water.

@@ -4,6 +4,6 @@ tags={
 	"Graphics"
 	"Utilities"
 }
-name="Sharp Terrain & Better Water: A Game of Thrones Patch"
+name="AGOT Patch for Sharp Terrain & Better Water"
 picture="thumbnail.png"
 supported_version="1.19.*"

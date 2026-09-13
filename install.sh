@@ -18,4 +18,4 @@ cp "$SRC/descriptor.mod" "$DST/mod/$NAME/descriptor.mod"
 { cat "$SRC/descriptor.mod"; printf 'path="mod/%s"\r\n' "$NAME"; } > "$DST/mod/$NAME.mod"
 
 echo "Установлено в $DST/mod/$NAME"
-echo "Дальше: включи 'Sharp Terrain & Better Water: A Game of Thrones Patch' в плейсете лаунчера, ниже AGOT, Sharp Terrain и Better Water."
+echo "Дальше: включи 'AGOT Patch for Sharp Terrain & Better Water' в плейсете лаунчера, ниже AGOT, Sharp Terrain и Better Water."

@@ -1,4 +1,4 @@
-# Sharp Terrain & Better Water: A Game of Thrones Patch - modified copy of
+# AGOT Patch for Sharp Terrain & Better Water - modified copy of
 # gfx/FX/pdxwater.shader from A Game of Thrones 0.5.2.1 (Workshop id 2962333032),
 # itself a modified copy of game/gfx/FX/pdxwater.shader from CK3 1.19.0.6 (Scribe).
 #
