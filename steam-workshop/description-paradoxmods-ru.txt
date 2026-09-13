@@ -2,7 +2,7 @@ AGOT Patch for Sharp Terrain & Better Water
 
 Гайд: https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441 — полный список настроек, под который собраны эти моды, на ноутбучной видеокарте с 4 ГБ при 5120x1440.
 
-Патч совместимости, с которым https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 (вместе с дополнением Real Snow) и STEAM_LINK_BETTER_WATER работают на карте https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Без него эти два мода под AGOT либо ничего не делают, либо ломают его ландшафт, в зависимости от порядка загрузки.
+Патч совместимости, с которым https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 (вместе с дополнением Real Snow) и https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988 работают на карте https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Без него эти два мода под AGOT либо ничего не делают, либо ломают его ландшафт, в зависимости от порядка загрузки.
 
 ЗАЧЕМ AGOT НУЖЕН ПАТЧ
 

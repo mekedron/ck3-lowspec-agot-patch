@@ -2,7 +2,7 @@
 
 [b]Guide:[/b] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441]CK3 on a potato PC: a locked 60 FPS, and the map still looks sharp[/url] — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
-A compatibility patch that makes [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542]Sharp Terrain Without Advanced Shaders[/url] (with its Real Snow add-on) and [url=STEAM_LINK_BETTER_WATER]Better Water Without Advanced Shaders[/url] work on the map of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032]A Game of Thrones[/url]. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
+A compatibility patch that makes [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542]Sharp Terrain Without Advanced Shaders[/url] (with its Real Snow add-on) and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988]Better Water Without Advanced Shaders[/url] work on the map of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032]A Game of Thrones[/url]. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
 
 [h2]Why AGOT needs a patch[/h2]
 
