@@ -39,12 +39,9 @@ TARGETS = [
     ('pdxwater.shader', 'waterLowSpec'),
     ('pdxwater.shader', 'lake'),
     ('pdxwater.shader', 'water'),
-    ('tree.shader', 'tree'),
-    ('pdxmesh.shader', 'standard_map_decoration_alpha_to_coverage'),
-    ('pdxborder.shader', 'PdxBorder'),
 ]
 # AGOT include files the patch overrides: (symbol proving the file is in the entry, file)
-FXH = [('GameApplyFogOfWar', 'agot_vic3_fog_of_war.fxh')]
+FXH = []
 MAIN_MAP = {
     ('pdxterrain.shader', 'PdxTerrainLowSpec'): {'PixelShaderLowSpec': 'PixelShaderLowSpecSharp'},
     ('pdxterrain.shader', 'PdxTerrainLowSpecSkirt'): {'PixelShaderLowSpec': 'PixelShaderLowSpecSharp'},
@@ -175,8 +172,7 @@ def main():
     a = ap.parse_args()
     dxc = os.path.join(a.dxc, 'bin', 'dxc')
     env = dict(os.environ, LD_LIBRARY_PATH=os.path.join(a.dxc, 'lib'))
-    options = [os.path.join(a.sharp, 'gfx/FX/sharp_terrain_options.fxh'), os.path.join(a.water, 'gfx/FX/better_water_options.fxh'),
-               os.path.join(MOD, 'gfx/FX/agot_patch_options.fxh')]
+    options = [os.path.join(a.sharp, 'gfx/FX/sharp_terrain_options.fxh'), os.path.join(a.water, 'gfx/FX/better_water_options.fxh')]
     for p in options:
         if not os.path.exists(p):
             print('missing options file:', p); sys.exit(2)
@@ -184,9 +180,6 @@ def main():
         ('default', switch_block(options), []),
         ('snow_material', switch_block(options), ['-DTERRAINOPT_SNOW_MATERIAL']),
         ('options_off', '', []),
-        ('vanilla_fow', switch_block(options), ['-DAGOTOPT_VANILLA_FOW']),
-        ('keep_clouds', switch_block(options), ['-DAGOTOPT_KEEP_CLOUDS', '-DAGOTOPT_KEEP_CLOUD_SHADOW']),
-        ('diag_no_fow', switch_block(options), ['-DAGOTOPT_DIAG_NO_FOW']),
     ]
     work = tempfile.mkdtemp(prefix='agotpatch_')
     failures = 0

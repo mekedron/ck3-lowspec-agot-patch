@@ -46,32 +46,13 @@ Each file starts with a `#` banner listing the changes; AGOT's own low spec bloc
 left in place, unreferenced, so `tools/diff_agot.sh` stays readable after an AGOT
 update.
 
-## Options: AGOT's fog of war and clouds
+## Frame rate
 
-AGOT's fog of war is a Victoria 3 port. Its `GameApplyFogOfWar` runs on every map pixel
-of every surface (terrain, water, trees, meshes, borders, rivers, map names) at every
-zoom, and reads AGOT's 4096x4096 cloud texture six times per pixel: three noise layers
-for the clouds and three for their shadows. The clouds are most visible zoomed out (60 %
-alpha at the "high" camera range), and the cloud shadows are always on - AGOT sets CK3's
-own cloud opacity to 0 and does its clouds here, so CK3's Cloud Shadows setting no
-longer switches them off.
-
-The patch ships AGOT's `agot_vic3_fog_of_war.fxh` with switches in
-`gfx/FX/agot_patch_options.fxh`. **By default the cloud layer and the cloud shadows are
-off** and only the fog of war darkness over unexplored land is drawn: zero cloud taps
-per pixel instead of six. The switches are "keep" switches, so each default can be
-undone live from the console (`-debug_mode` launch option), one at a time:
-
-| console command | effect |
-| --- | --- |
-| `shader_debug AGOTOPT_VANILLA_FOW` | AGOT's fog of war exactly as shipped: clouds and shadows, 6 taps |
-| `shader_debug AGOTOPT_KEEP_CLOUDS` | the cloud layer back, from one noise layer (AGOT's own `LOW_QUALITY_SHADERS` path) |
-| `shader_debug AGOTOPT_KEEP_CLOUD_SHADOW` | the cloud shadows back, from one noise layer |
-| `shader_debug AGOTOPT_DIAG_NO_FOW` | diagnostic: the whole pass off, darkness included, to measure what it costs |
-| `shader_debug` | back to the defaults |
-
-To keep clouds or their shadows for good, uncomment the matching `#define` in the
-options file.
+This patch is about looks, not speed: it costs what the base mods cost. The big AGOT
+cost on a small GPU is AGOT's own fog of war, six taps of a 4096x4096 cloud texture on
+every map pixel at every zoom; that is handled by the separate
+[AGOT Performance Patch](https://github.com/mekedron/ck3-agot-performance-patch), which needs nothing but AGOT and does not overlap
+with this one in files.
 
 ## Load order
 
@@ -107,8 +88,6 @@ what it is.
     thumbnail.png                  Workshop preview, must sit in the mod root
     gfx/FX/pdxterrain.shader       AGOT terrain + Sharp Terrain's low spec path
     gfx/FX/pdxwater.shader         AGOT water + Better Water's cheap water
-    gfx/FX/agot_vic3_fog_of_war.fxh  AGOT fog of war + the AGOTOPT_* switches
-    gfx/FX/agot_patch_options.fxh  the switches, all off
     install.sh                     copies the mod into the Proton prefix
     tools/check_log.sh             mount order + shader error check after a game start
     tools/compile_check.py         offline compile check with DXC
@@ -139,15 +118,14 @@ Before starting the game at all:
 takes a cache entry of every touched effect that was expanded from AGOT's shaders
 (AGOT must have been run once with Advanced Shaders off), swaps in this mod's code
 blocks, prepends the option files of Sharp Terrain and Better Water from the sibling
-repositories, and compiles the result with DXC in six variants: options as shipped,
-`TERRAINOPT_SNOW_MATERIAL` (Real Snow), all options off, and the three AGOTOPT groups. This is how the patch was
-verified: 9 effects x 6 variants.
+repositories, and compiles the result with DXC in three variants: options as shipped,
+`TERRAINOPT_SNOW_MATERIAL` (Real Snow), and all options off. This is how the patch was
+verified: 6 effects x 3 variants.
 
 ## Versions
 
 Built against CK3 **1.19.0.6 (Scribe)**, AGOT **0.5.2.1**, Sharp Terrain 1.1 and Better
-Water 1.0. An AGOT release that changes `pdxterrain.shader`, `pdxwater.shader` or
-`agot_vic3_fog_of_war.fxh` needs
+Water 1.0. An AGOT release that changes `pdxterrain.shader` or `pdxwater.shader` needs
 the patch rebuilt: run `tools/diff_agot.sh`, everything in the output that is not one of
 the changes named in the file banners is AGOT's, and has to be carried over onto the new
 AGOT copy. The include files AGOT changes (`dynamic_masks.fxh`, `agot_atmospheric.fxh`
