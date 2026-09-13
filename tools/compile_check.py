@@ -77,6 +77,9 @@ def find_entries(cache, shader, effect):
         # shader mod overriding dynamic_masks.fxh leaves entries that cannot compile at all)
         if AGOT_MARKER not in body or 'AGOT_GetAdjustedWinterSeverityValueImpl' not in body:
             continue
+        # not an entry that already contains this patch's or another mod's code
+        if any(m in body for m in ('PixelShaderLowSpecSharp', 'ApplySnowMaterialTerrainCheap', 'AGOTPERF_', 'WATEROPT_CHEAP_WAVES')):
+            continue
         out.append(p)
     return out
 
