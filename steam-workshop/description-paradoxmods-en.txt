@@ -2,7 +2,7 @@ AGOT Patch for Sharp Terrain & Better Water
 
 Guide: https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441 — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
-A compatibility patch that makes https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 (with its Real Snow add-on) and https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988 work on the map of https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
+A compatibility patch that makes https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 and https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988 work on the map of https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
 
 WHY AGOT NEEDS A PATCH
 
@@ -10,11 +10,11 @@ AGOT ships its own copies of the map shaders, the terrain and water among them, 
 
 WHAT THE PATCH IS
 
-Two files: AGOT's terrain and water shaders with the two mods' changes applied on top, exactly as in the mods. AGOT's atmospheric effects, snowfall and skybox stay; Sharp Terrain's per pixel low spec terrain and Better Water's cheap shaded ocean and lakes are added. The Real Snow add-on works through it unchanged. Nothing is duplicated: the option files and the water function come from the base mods, which is why they must stay enabled.
+Two files: AGOT's terrain and water shaders with the two mods' changes applied on top, exactly as in the mods. AGOT's atmospheric effects, snowfall and skybox stay; Sharp Terrain's per pixel low spec terrain and Better Water's cheap shaded ocean and lakes are added. Nothing is duplicated: the option files and the water function come from the base mods, which is why they must stay enabled.
 
 SNOW ON THE AGOT MAP
 
-AGOT's snow mask is one colour over the whole map with the red channel at 255, which the snow material reads as "no snow allowed anywhere": on the AGOT map the material never runs, and Real Snow showed AGOT's flat procedural snow instead. This patch ships a mask with vanilla's noise and red at 0, so the snow material runs and is gated by the winter severity the game computes per province. If you also use AGOT Performance Patch, load it above this one.
+Real Snow has no effect here, on purpose: AGOT's snow mask texture is one colour with the red channel at 255, which the snow material reads as "no snow allowed anywhere", and a replacement mask still showed no snow. So this patch always draws AGOT's own procedural snow and does not spend the snow material's texture reads on that map.
 
 LOAD ORDER
 
@@ -34,12 +34,12 @@ NOTES
 - Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
 - Safe to add or remove at any time, including mid-campaign
 - The first map load after enabling is slower: the two shaders are compiled and cached from scratch
-- About looks, not speed: for the frame rate see STEAM_LINK_AGOT_PERF, which makes AGOT's fog of war six times cheaper per pixel; independent of this mod
+- About looks, not speed: for the frame rate see https://steamcommunity.com/sharedfiles/filedetails/?id=3800643557, which puts switches on AGOT's fog of war and ships its largest textures smaller; independent of this mod
 - Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
 
 COMPATIBILITY
 
-Replaces gfx/FX/pdxterrain.shader, gfx/FX/pdxwater.shader and gfx/map/textures/snow_mask.dds in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
+Replaces gfx/FX/pdxterrain.shader and gfx/FX/pdxwater.shader in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
 
 SOURCE
 

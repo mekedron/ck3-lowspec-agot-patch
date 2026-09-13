@@ -2,7 +2,7 @@
 
 [b]Guide:[/b] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441]CK3 on a potato PC: a locked 60 FPS, and the map still looks sharp[/url] — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
-A compatibility patch that makes [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542]Sharp Terrain Without Advanced Shaders[/url] (with its Real Snow add-on) and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988]Better Water Without Advanced Shaders[/url] work on the map of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032]A Game of Thrones[/url]. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
+A compatibility patch that makes [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542]Sharp Terrain Without Advanced Shaders[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988]Better Water Without Advanced Shaders[/url] work on the map of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032]A Game of Thrones[/url]. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
 
 [h2]Why AGOT needs a patch[/h2]
 
@@ -10,7 +10,7 @@ AGOT ships its own copies of the map shaders, the terrain and water among them, 
 
 [h2]What the patch is[/h2]
 
-Two files: AGOT's terrain and water shaders with the two mods' changes applied on top, exactly as in the mods. AGOT's atmospheric effects, snowfall and skybox stay; Sharp Terrain's per pixel low spec terrain and Better Water's cheap shaded ocean and lakes are added. The Real Snow add-on works through it unchanged. Nothing is duplicated: the option files and the water function come from the base mods, which is why they must stay enabled.
+Two files: AGOT's terrain and water shaders with the two mods' changes applied on top, exactly as in the mods. AGOT's atmospheric effects, snowfall and skybox stay; Sharp Terrain's per pixel low spec terrain and Better Water's cheap shaded ocean and lakes are added. Nothing is duplicated: the option files and the water function come from the base mods, which is why they must stay enabled.
 
 [h2]Snow on the AGOT map[/h2]
 
@@ -37,7 +37,7 @@ Requires all three of AGOT, Sharp Terrain and Better Water.
 [*]Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
 [*]Safe to add or remove at any time, including mid-campaign
 [*]The first map load after enabling is slower: the two shaders are compiled and cached from scratch
-[*]About looks, not speed: for the frame rate see [url=STEAM_LINK_AGOT_PERF]AGOT Performance Patch[/url], which makes AGOT's fog of war six times cheaper per pixel; independent of this mod
+[*]About looks, not speed: for the frame rate see [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800643557]AGOT Performance Patch[/url], which puts switches on AGOT's fog of war and ships its largest textures smaller; independent of this mod
 [*]Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
 [/list]
 
