@@ -1,0 +1,130 @@
+# Sharp Terrain & Better Water: A Game of Thrones Patch (CK3)
+
+Патч совместимости, с которым
+[Sharp Terrain Without Advanced Shaders](https://github.com/mekedron/ck3-lowspec-terrain-fix)
+(вместе с дополнением [Real Snow](https://github.com/mekedron/ck3-lowspec-real-snow)) и
+[Better Water Without Advanced Shaders](https://github.com/mekedron/ck3-lowspec-water)
+работают на карте глобальной конверсии
+[A Game of Thrones](https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032).
+Без него эти два мода под AGOT либо ничего не делают, либо ломают его ландшафт, в
+зависимости от порядка загрузки.
+
+## Зачем AGOT нужен патч
+
+AGOT везёт собственные копии большинства шейдеров карты, в том числе
+`pdxterrain.shader` и `pdxwater.shader`, и переписывает общие для них подключаемые
+файлы: его функции снега принимают дополнительные аргументы «варианта ландшафта»,
+ванильный туман войны заменён проходом атмосферных эффектов (туман войны плюс
+падающий снег), а вода отбрасывает всё за пределами карты, чтобы там был виден скайбокс
+AGOT. Sharp Terrain и Better Water целиком заменяют те же два файла шейдеров, собранные
+на базе ванильных. Поэтому:
+
+* если AGOT в порядке загрузки **ниже** них, побеждают его файлы, и оба мода не делают
+  ничего;
+* если AGOT **выше**, побеждают их файлы, но собираются они с подключаемыми файлами
+  AGOT: low-spec пиксельный шейдер Sharp Terrain зовёт ванильный трёхаргументный
+  `ApplyDynamicMasksDiffuse`, которого больше нет, ландшафт не компилируется и не
+  рисуется, а вода теряет атмосферный проход AGOT и вырез под скайбокс.
+
+Механизм опций обоих модов не затронут: AGOT не поставляет ни
+`sharp_terrain_options.fxh`, ни `better_water_options.fxh`, ни `jomini_water_default.fxh`.
+
+## Что такое патч
+
+Два файла: `pdxterrain.shader` и `pdxwater.shader` из AGOT, поверх которых наложены
+правки двух модов, ровно такие же, как в самих модах:
+
+| файл | сохранено из AGOT | добавлено из модов |
+| --- | --- | --- |
+| `gfx/FX/pdxterrain.shader` | атмосферные эффекты, снегопад, аргументы его функций снега, исправление `ReorientedNormal` | `PixelShaderLowSpecSharp` (детальные текстуры per pixel в low spec) и low-spec эффекты, переключённые на него; include `sharp_terrain_options.fxh`, чтобы работал `TERRAINOPT_SNOW_MATERIAL` из дополнения Real Snow; два вызова внутри нового шейдера в версии AGOT: `ApplyDynamicMasksDiffuse( ..., 0, 0, 0.0f )` и `AGOT_ApplyAtmosphericEffects` вместо `ApplyFogOfWar` |
+| `gfx/FX/pdxwater.shader` | атмосферные эффекты на воде, вырез под скайбокс | `CalcWaterCheap` для океана под `WATEROPT_CHEAP_WAVES` и для озёр под `WATEROPT_CHEAP_LAKES`; include `better_water_options.fxh` |
+
+Сам `CalcWaterCheap` и оба файла опций не дублируются: они приходят из базовых модов,
+поэтому те должны оставаться включёнными. Дополнению Real Snow отдельный патч не нужен:
+оно только подменяет файл опций.
+
+Каждый файл начинается с баннера `#` со списком изменений; собственные low-spec блоки
+AGOT оставлены на месте без ссылок, чтобы `tools/diff_agot.sh` читался после обновления
+AGOT.
+
+## Порядок загрузки
+
+Патч должен быть самым нижним в группе:
+
+    A Game of Thrones
+    Sharp Terrain Without Advanced Shaders
+    Real Snow Without Advanced Shaders            (по желанию)
+    Better Water Without Advanced Shaders
+    Sharp Terrain & Better Water: A Game of Thrones Patch
+
+Требует все три: AGOT, Sharp Terrain и Better Water. Список в лаунчере отсортирован по
+порядку загрузки, первая строка грузится первой; для файла, который есть в нескольких
+модах, побеждает самый нижний.
+
+Настройку **«Дополнительные эффекты шейдеров»** держите выключенной, как и для
+базовых модов. С ней игра использует high-spec эффекты AGOT, и патч ничего не меняет.
+
+**Fast Advanced Shaders** (отладочный мод того же семейства) с AGOT несовместим и здесь
+не покрыт: он переопределяет `jomini/jomini_province_overlays.fxh`, `pdxmesh.shader` и
+другие файлы, от которых зависит AGOT. В плейсетах с AGOT его нужно выключать.
+
+## Цена
+
+Та же, что у базовых модов: per-pixel выборка деталей Sharp Terrain, около 4 мс зимой с
+Real Snow и шесть выборок на пиксель воды у Better Water (меньше, чем у плоской
+ванильной low-spec воды). Собственная дополнительная работа AGOT, его атмосферный
+проход и снегопад, остаётся какой была.
+
+## Структура
+
+    descriptor.mod                 метаданные мода
+    thumbnail.png                  превью для Workshop, в корне мода
+    gfx/FX/pdxterrain.shader       ландшафт AGOT + low-spec путь Sharp Terrain
+    gfx/FX/pdxwater.shader         вода AGOT + дешёвая вода Better Water
+    install.sh                     копирует мод в Proton-префикс
+    tools/check_log.sh             порядок монтирования и ошибки шейдеров после запуска
+    tools/compile_check.py         офлайн-проверка компиляции через DXC
+    tools/diff_agot.sh             diff с установленным AGOT после его обновления
+    tools/bbcode_to_plain.py       описания для Paradox Mods из Steam-версии
+    steam-workshop/                тексты для листинга и генератор превью
+
+## Установка
+
+Запустите `./install.sh`. Он копирует мод в папку модов CK3 внутри Proton-префикса.
+Затем включите его в плейсете лаунчера ниже перечисленных выше модов. Первая загрузка
+карты медленнее, пока два шейдера пересобираются.
+
+## Проверка
+
+    tools/check_log.sh
+
+печатает порядок монтирования из `debug.log` (этот мод должен идти после AGOT, Sharp
+Terrain и Better Water) и ошибки шейдеров из `error.log`. DirectX 11 пишет ошибку как
+`Compile error:` и следом `Failed creating shader state`, Vulkan как `Failed to compile
+shader`; скрипт ищет оба варианта. Шейдер, который не собрался, просто не рисует свою
+поверхность: видимый симптом — пропавший ландшафт или море.
+
+До запуска игры:
+
+    tools/compile_check.py --dxc <папка с bin/dxc и lib/libdxcompiler.so>
+
+берёт из кэша шейдеров запись каждого затронутого эффекта, развёрнутую из шейдеров AGOT
+(AGOT должен был хоть раз запуститься с выключенными шейдерами), подставляет блоки кода
+этого мода, добавляет файлы опций Sharp Terrain и Better Water из соседних
+репозиториев и компилирует результат DXC в трёх вариантах: опции как есть,
+`TERRAINOPT_SNOW_MATERIAL` (Real Snow) и все опции выключены. Так патч и проверялся:
+6 эффектов x 3 варианта.
+
+## Версии
+
+Собран под CK3 **1.19.0.6 (Scribe)**, AGOT **0.5.2.1**, Sharp Terrain 1.1 и Better
+Water 1.0. Релиз AGOT, меняющий `pdxterrain.shader` или `pdxwater.shader`, требует
+пересборки патча: запустите `tools/diff_agot.sh`; всё в выводе, что не является одним из
+изменений из баннеров файлов, принадлежит AGOT и переносится на его новую копию.
+Подключаемые файлы, которые меняет AGOT (`dynamic_masks.fxh`, `agot_atmospheric.fxh` и
+остальные), здесь не поставляются, так что их изменения подхватываются сами.
+
+## Мультиплеер / достижения
+
+Файлы шейдеров не входят в контрольную сумму, но лаунчер всё равно помечает любой мод
+как мод. Относитесь к нему как к любому графическому моду.

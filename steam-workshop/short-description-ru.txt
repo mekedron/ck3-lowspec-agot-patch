@@ -1,0 +1,1 @@
+Заставляет Sharp Terrain (с Real Snow) и Better Water Without Advanced Shaders работать на карте A Game of Thrones. Два шейдера на базе AGOT, ничего больше. Ставить ниже AGOT и обоих модов.

@@ -1,0 +1,42 @@
+Sharp Terrain & Better Water: A Game of Thrones Patch
+
+Guide: https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441 — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
+
+A compatibility patch that makes https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 (with its Real Snow add-on) and STEAM_LINK_BETTER_WATER work on the map of https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
+
+WHY AGOT NEEDS A PATCH
+
+AGOT ships its own copies of the map shaders, the terrain and water among them, and rewrites the include files they share: its snow functions take extra arguments, the vanilla fog of war is replaced by an atmospheric pass with falling snow, and the water is cut out beyond the map edge so AGOT's skybox shows there. Sharp Terrain and Better Water replace the same two shader files, built on the vanilla ones. With AGOT below them in the load order AGOT's files win and the mods have no effect; with AGOT above them the mods' files are compiled against AGOT's include files, the terrain shader fails to compile and is not drawn, and the water loses AGOT's atmosphere and skybox cut-out.
+
+WHAT THE PATCH IS
+
+Two files: AGOT's terrain and water shaders with the two mods' changes applied on top, exactly as in the mods. AGOT's atmospheric effects, snowfall and skybox stay; Sharp Terrain's per pixel low spec terrain and Better Water's cheap shaded ocean and lakes are added. The Real Snow add-on works through it unchanged. Nothing is duplicated: the option files and the water function come from the base mods, which is why they must stay enabled.
+
+LOAD ORDER
+
+The patch must be the lowest of the group:
+
+- A Game of Thrones
+- Sharp Terrain Without Advanced Shaders
+- Real Snow Without Advanced Shaders (optional)
+- Better Water Without Advanced Shaders
+- Sharp Terrain & Better Water: A Game of Thrones Patch
+
+Requires all three of AGOT, Sharp Terrain and Better Water.
+
+NOTES
+
+- Keep Advanced Shaders off. With it on the game uses AGOT's high spec effects and the patch changes nothing
+- Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
+- Safe to add or remove at any time, including mid-campaign
+- The first map load after enabling is slower: the two shaders are compiled and cached from scratch
+- Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
+
+COMPATIBILITY
+
+Replaces gfx/FX/pdxterrain.shader and gfx/FX/pdxwater.shader in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
+
+SOURCE
+
+Full source on GitHub, including the exact changes against AGOT's shaders and an install script for Linux / Proton users:
+https://github.com/mekedron/ck3-lowspec-agot-patch

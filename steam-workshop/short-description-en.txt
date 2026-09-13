@@ -1,0 +1,1 @@
+Makes Sharp Terrain (with Real Snow) and Better Water Without Advanced Shaders work on the A Game of Thrones map. Two AGOT-based shader files, nothing else. Load it below AGOT and both mods.
