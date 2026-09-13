@@ -57,11 +57,11 @@ says, and does not spend the snow material's texture reads on it.
 
 ## Frame rate
 
-This patch is about looks, not speed: it costs what the base mods cost. The big AGOT
-cost on a small GPU is AGOT's own fog of war, six taps of a 4096x4096 cloud texture on
-every map pixel at every zoom; that is handled by the separate
-[AGOT Performance Patch](https://github.com/mekedron/ck3-agot-performance-patch), which needs nothing but AGOT and does not overlap
-with this one in files.
+This patch is about looks, not speed: it costs what the base mods cost. On AGOT the
+frame rate comes from the settings - Texture Quality Low on a 4 GB card, Map Objects
+off - and in the royal court from
+[AGOT Vanilla Courts](https://github.com/mekedron/ck3-agot-vanilla-courts). Cutting AGOT's
+fog of war down (the withdrawn AGOT Performance Patch) made no measurable difference.
 
 ## Load order
 

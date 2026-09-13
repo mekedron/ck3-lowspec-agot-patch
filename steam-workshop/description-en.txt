@@ -37,7 +37,7 @@ Requires all three of AGOT, Sharp Terrain and Better Water.
 [*]Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
 [*]Safe to add or remove at any time, including mid-campaign
 [*]The first map load after enabling is slower: the two shaders are compiled and cached from scratch
-[*]About looks, not speed: for the frame rate see [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800643557]AGOT Performance Patch[/url], which puts switches on AGOT's fog of war and ships its largest textures smaller; independent of this mod
+[*]About looks, not speed: on AGOT the frame rate comes from the settings (Texture Quality Low on a 4 GB card, Map Objects off) and, in the royal court, from [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800957484]AGOT Vanilla Courts[/url]; independent of this mod
 [*]Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
 [/list]
 
