@@ -39,7 +39,12 @@ TARGETS = [
     ('pdxwater.shader', 'waterLowSpec'),
     ('pdxwater.shader', 'lake'),
     ('pdxwater.shader', 'water'),
+    ('tree.shader', 'tree'),
+    ('pdxmesh.shader', 'standard_map_decoration_alpha_to_coverage'),
+    ('pdxborder.shader', 'PdxBorder'),
 ]
+# AGOT include files the patch overrides: (symbol proving the file is in the entry, file)
+FXH = [('GameApplyFogOfWar', 'agot_vic3_fog_of_war.fxh')]
 MAIN_MAP = {
     ('pdxterrain.shader', 'PdxTerrainLowSpec'): {'PixelShaderLowSpec': 'PixelShaderLowSpecSharp'},
     ('pdxterrain.shader', 'PdxTerrainLowSpecSkirt'): {'PixelShaderLowSpec': 'PixelShaderLowSpecSharp'},
@@ -70,7 +75,10 @@ def find_entries(cache, shader, effect):
             continue
         if '#define LOW_SPEC_SHADERS' not in head:
             continue
-        if AGOT_MARKER not in read(p):
+        body = read(p)
+        # an entry expanded from AGOT's shaders AND AGOT's include files (a run with another
+        # shader mod overriding dynamic_masks.fxh leaves entries that cannot compile at all)
+        if AGOT_MARKER not in body or 'AGOT_GetAdjustedWinterSeverityValueImpl' not in body:
             continue
         out.append(p)
     return out
@@ -167,7 +175,8 @@ def main():
     a = ap.parse_args()
     dxc = os.path.join(a.dxc, 'bin', 'dxc')
     env = dict(os.environ, LD_LIBRARY_PATH=os.path.join(a.dxc, 'lib'))
-    options = [os.path.join(a.sharp, 'gfx/FX/sharp_terrain_options.fxh'), os.path.join(a.water, 'gfx/FX/better_water_options.fxh')]
+    options = [os.path.join(a.sharp, 'gfx/FX/sharp_terrain_options.fxh'), os.path.join(a.water, 'gfx/FX/better_water_options.fxh'),
+               os.path.join(MOD, 'gfx/FX/agot_patch_options.fxh')]
     for p in options:
         if not os.path.exists(p):
             print('missing options file:', p); sys.exit(2)
@@ -175,6 +184,9 @@ def main():
         ('default', switch_block(options), []),
         ('snow_material', switch_block(options), ['-DTERRAINOPT_SNOW_MATERIAL']),
         ('options_off', '', []),
+        ('fow_2tap', switch_block(options), ['-DAGOTOPT_FOW_2TAP']),
+        ('no_clouds', switch_block(options), ['-DAGOTOPT_NO_CLOUDS', '-DAGOTOPT_NO_CLOUD_SHADOW']),
+        ('diag_no_fow', switch_block(options), ['-DAGOTOPT_DIAG_NO_FOW']),
     ]
     work = tempfile.mkdtemp(prefix='agotpatch_')
     failures = 0
@@ -198,8 +210,14 @@ def main():
             print(f'{tag:30} BASELINE (AGOT, cleaned) FAILS - harness problem, not the mod:\n    ' + err.strip().replace('\n', '\n    ')[:2000])
             failures += 1
             continue
-        # 2. AGOT's file -> this mod's file
-        n, notes = apply_blocks(dst, os.path.join(a.agot, 'gfx/FX', shader), os.path.join(MOD, 'gfx/FX', shader), MAIN_MAP.get((shader, effect)))
+        # 2. AGOT's files -> this mod's files (the shader itself, if the patch ships it, and the include files)
+        n, notes = 0, []
+        if os.path.exists(os.path.join(MOD, 'gfx/FX', shader)):
+            n, notes = apply_blocks(dst, os.path.join(a.agot, 'gfx/FX', shader), os.path.join(MOD, 'gfx/FX', shader), MAIN_MAP.get((shader, effect)))
+        for symbol, fxh in FXH:
+            if symbol in text and os.path.exists(os.path.join(MOD, 'gfx/FX', fxh)):
+                m, notes2 = apply_blocks(dst, os.path.join(a.agot, 'gfx/FX', fxh), os.path.join(MOD, 'gfx/FX', fxh))
+                n += m; notes += notes2
         src = read(dst)
         for vname, block, defs in VARIANTS:
             vdst = dst[:-5] + f'.{vname}.hlsl'

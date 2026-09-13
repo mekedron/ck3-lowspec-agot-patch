@@ -30,11 +30,12 @@ NOTES
 - Graphics-only: no gameplay, script or history files, so ironman and achievements are unaffected
 - Safe to add or remove at any time, including mid-campaign
 - The first map load after enabling is slower: the two shaders are compiled and cached from scratch
+- Optional switches in gfx/FX/agot_patch_options.fxh (all off): AGOT's fog of war reads its 4096x4096 cloud texture six times per pixel on every surface at every zoom; the switches cut that to two taps, drop the cloud shadows, or drop the cloud layer
 - Built for CK3 1.19.x and AGOT 0.5.2.1. An AGOT release that reworks its terrain or water shader will need an update here
 
 COMPATIBILITY
 
-Replaces gfx/FX/pdxterrain.shader and gfx/FX/pdxwater.shader in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
+Replaces gfx/FX/pdxterrain.shader, gfx/FX/pdxwater.shader and gfx/FX/agot_vic3_fog_of_war.fxh in full, on top of AGOT's versions. Conflicts with other mods that edit those files for AGOT, mostly map graphics overhauls; not needed and not usable without AGOT.
 
 SOURCE
 

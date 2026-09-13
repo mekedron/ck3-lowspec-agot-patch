@@ -7,7 +7,7 @@ AGOT="${AGOT_DIR:-$HOME/.local/share/Steam/steamapps/workshop/content/1158310/29
 MOD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [ -d "$AGOT/gfx/FX" ] || { echo "AGOT not found at $AGOT (set AGOT_DIR)" >&2; exit 1; }
 echo "AGOT $(grep -m1 '^version' "$AGOT/descriptor.mod")"
-for f in pdxterrain.shader pdxwater.shader; do
+for f in pdxterrain.shader pdxwater.shader agot_vic3_fog_of_war.fxh; do
 	echo "===== gfx/FX/$f"
 	diff -u --strip-trailing-cr "$AGOT/gfx/FX/$f" "$MOD/gfx/FX/$f"
 done

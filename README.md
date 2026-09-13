@@ -46,6 +46,29 @@ Each file starts with a `#` banner listing the changes; AGOT's own low spec bloc
 left in place, unreferenced, so `tools/diff_agot.sh` stays readable after an AGOT
 update.
 
+## Options: AGOT's fog of war and clouds
+
+AGOT's fog of war is a Victoria 3 port. Its `GameApplyFogOfWar` runs on every map pixel
+of every surface (terrain, water, trees, meshes, borders, rivers, map names) at every
+zoom, and reads AGOT's 4096x4096 cloud texture six times per pixel: three noise layers
+for the clouds and three for their shadows. The clouds are most visible zoomed out (60 %
+alpha at the "high" camera range), and the cloud shadows are always on - AGOT sets CK3's
+own cloud opacity to 0 and does its clouds here, so CK3's Cloud Shadows setting no
+longer switches them off.
+
+The patch ships AGOT's `agot_vic3_fog_of_war.fxh` with four switches, all off by
+default, in `gfx/FX/agot_patch_options.fxh`:
+
+| switch | what it does |
+| --- | --- |
+| `AGOTOPT_FOW_2TAP` | one noise layer each for clouds and cloud shadows (AGOT's own `LOW_QUALITY_SHADERS` path): 2 taps instead of 6, coarser cloud shapes |
+| `AGOTOPT_NO_CLOUD_SHADOW` | no cloud shadows on the map, 3 taps saved; fog of war darkness and clouds stay |
+| `AGOTOPT_NO_CLOUDS` | no cloud layer, 3 taps saved; fog of war darkness and cloud shadows stay |
+| `AGOTOPT_DIAG_NO_FOW` | diagnostic: the whole pass returns its input, for measuring what it costs |
+
+Try one live from the console (`-debug_mode` launch option): `shader_debug
+AGOTOPT_NO_CLOUDS`; make it permanent by uncommenting its `#define` in the options file.
+
 ## Load order
 
 The patch must be the lowest of the group:
@@ -80,6 +103,8 @@ what it is.
     thumbnail.png                  Workshop preview, must sit in the mod root
     gfx/FX/pdxterrain.shader       AGOT terrain + Sharp Terrain's low spec path
     gfx/FX/pdxwater.shader         AGOT water + Better Water's cheap water
+    gfx/FX/agot_vic3_fog_of_war.fxh  AGOT fog of war + the AGOTOPT_* switches
+    gfx/FX/agot_patch_options.fxh  the switches, all off
     install.sh                     copies the mod into the Proton prefix
     tools/check_log.sh             mount order + shader error check after a game start
     tools/compile_check.py         offline compile check with DXC
@@ -110,14 +135,15 @@ Before starting the game at all:
 takes a cache entry of every touched effect that was expanded from AGOT's shaders
 (AGOT must have been run once with Advanced Shaders off), swaps in this mod's code
 blocks, prepends the option files of Sharp Terrain and Better Water from the sibling
-repositories, and compiles the result with DXC in three variants: options as shipped,
-`TERRAINOPT_SNOW_MATERIAL` (Real Snow), and all options off. This is how the patch was
-verified: 6 effects x 3 variants.
+repositories, and compiles the result with DXC in six variants: options as shipped,
+`TERRAINOPT_SNOW_MATERIAL` (Real Snow), all options off, and the three AGOTOPT groups. This is how the patch was
+verified: 9 effects x 6 variants.
 
 ## Versions
 
 Built against CK3 **1.19.0.6 (Scribe)**, AGOT **0.5.2.1**, Sharp Terrain 1.1 and Better
-Water 1.0. An AGOT release that changes `pdxterrain.shader` or `pdxwater.shader` needs
+Water 1.0. An AGOT release that changes `pdxterrain.shader`, `pdxwater.shader` or
+`agot_vic3_fog_of_war.fxh` needs
 the patch rebuilt: run `tools/diff_agot.sh`, everything in the output that is not one of
 the changes named in the file banners is AGOT's, and has to be carried over onto the new
 AGOT copy. The include files AGOT changes (`dynamic_masks.fxh`, `agot_atmospheric.fxh`
