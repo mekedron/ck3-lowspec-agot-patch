@@ -46,6 +46,20 @@ Each file starts with a `#` banner listing the changes; AGOT's own low spec bloc
 left in place, unreferenced, so `tools/diff_agot.sh` stays readable after an AGOT
 update.
 
+## Snow on the AGOT map
+
+AGOT's `gfx/map/textures/snow_mask.dds` is one colour over the whole map, and its red
+channel is 255. The snow material of the terrain and of the map meshes reads `1 - red`
+as "how much snow is allowed here" and returns before drawing anything when that is
+under 0.05, so on the AGOT map the snow material never runs: with Real Snow on, the
+terrain still showed AGOT's flat procedural snow, and switching to vanilla's material
+changed nothing either. This patch ships a snow mask with vanilla's noise channels and
+red set to 0, so the material runs everywhere and is gated by the winter severity the
+game computes per province, as on the vanilla map. `tools/make_snow_mask.py`
+regenerates it from the vanilla file. The AGOT Performance Patch ships its own tiny
+copy of AGOT's one-colour mask to save memory; load that patch **above** this one so
+this mask wins.
+
 ## Frame rate
 
 This patch is about looks, not speed: it costs what the base mods cost. The big AGOT
@@ -62,6 +76,7 @@ The patch must be the lowest of the group:
     Sharp Terrain Without Advanced Shaders
     Real Snow Without Advanced Shaders            (optional)
     Better Water Without Advanced Shaders
+    AGOT Performance Patch                        (optional; above this one)
     AGOT Patch for Sharp Terrain & Better Water
 
 Requires all three of AGOT, Sharp Terrain and Better Water. The launcher's list is
@@ -88,6 +103,8 @@ what it is.
     thumbnail.png                  Workshop preview, must sit in the mod root
     gfx/FX/pdxterrain.shader       AGOT terrain + Sharp Terrain's low spec path
     gfx/FX/pdxwater.shader         AGOT water + Better Water's cheap water
+    gfx/map/textures/snow_mask.dds snow mask that lets the snow material run on the AGOT map
+    tools/make_snow_mask.py        regenerates it from vanilla's mask
     install.sh                     copies the mod into the Proton prefix
     tools/check_log.sh             mount order + shader error check after a game start
     tools/compile_check.py         offline compile check with DXC

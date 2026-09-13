@@ -47,6 +47,20 @@ AGOT. Sharp Terrain и Better Water целиком заменяют те же д
 AGOT оставлены на месте без ссылок, чтобы `tools/diff_agot.sh` читался после обновления
 AGOT.
 
+## Снег на карте AGOT
+
+`gfx/map/textures/snow_mask.dds` у AGOT одноцветный на всю карту, и его красный канал
+равен 255. Материал снега ландшафта и мешей карты читает `1 - red` как «сколько снега
+здесь разрешено» и выходит, ничего не нарисовав, когда это меньше 0,05, так что на карте
+AGOT материал снега никогда не запускается: с включённым Real Snow ландшафт по-прежнему
+показывал плоский процедурный снег AGOT, и переключение на ванильный материал тоже
+ничего не меняло. Этот патч везёт маску снега с ванильными каналами шума и красным
+каналом 0, так что материал работает везде и ограничен только суровостью зимы, которую
+игра считает по провинциям, как на ванильной карте. `tools/make_snow_mask.py`
+пересобирает её из ванильного файла. AGOT Performance Patch везёт свою крошечную копию
+одноцветной маски AGOT ради памяти; ставьте тот патч **выше** этого, чтобы побеждала
+эта маска.
+
 ## Частота кадров
 
 Этот патч про картинку, а не про скорость: он стоит столько же, сколько базовые моды.
@@ -63,6 +77,7 @@ AGOT.
     Sharp Terrain Without Advanced Shaders
     Real Snow Without Advanced Shaders            (по желанию)
     Better Water Without Advanced Shaders
+    AGOT Performance Patch                        (по желанию; выше этого)
     AGOT Patch for Sharp Terrain & Better Water
 
 Требует все три: AGOT, Sharp Terrain и Better Water. Список в лаунчере отсортирован по
@@ -89,6 +104,8 @@ Real Snow и шесть выборок на пиксель воды у Better Wa
     thumbnail.png                  превью для Workshop, в корне мода
     gfx/FX/pdxterrain.shader       ландшафт AGOT + low-spec путь Sharp Terrain
     gfx/FX/pdxwater.shader         вода AGOT + дешёвая вода Better Water
+    gfx/map/textures/snow_mask.dds маска снега, с которой материал снега работает на карте AGOT
+    tools/make_snow_mask.py        пересобирает её из ванильной маски
     install.sh                     копирует мод в Proton-префикс
     tools/check_log.sh             порядок монтирования и ошибки шейдеров после запуска
     tools/compile_check.py         офлайн-проверка компиляции через DXC
