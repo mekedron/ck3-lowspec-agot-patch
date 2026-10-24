@@ -1,5 +1,9 @@
 [h1]AGOT Patch for Sharp Terrain & Better Water[/h1]
 
+[h2]Help fix this in the base game[/h2]
+I have asked Paradox for one graphics checkbox that makes the map sharp with Advanced Shaders off — in the game itself, for everyone, with no conflicts with total conversions. If this mod helps you, please [b]like the thread or reply with your GPU[/b], so the developers see how many of us there are:
+[url=https://forum.paradoxplaza.com/forum/threads/1946916/]Paradox forum: sharp terrain with Advanced Shaders off[/url]
+
 [b]Guide:[/b] [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441]CK3 on a potato PC: a locked 60 FPS, and the map still looks sharp[/url] — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
 A compatibility patch that makes [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542]Sharp Terrain Without Advanced Shaders[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988]Better Water Without Advanced Shaders[/url] work on the map of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032]A Game of Thrones[/url]. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.

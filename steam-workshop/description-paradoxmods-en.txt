@@ -1,5 +1,9 @@
 AGOT Patch for Sharp Terrain & Better Water
 
+HELP FIX THIS IN THE BASE GAME
+I have asked Paradox for one graphics checkbox that makes the map sharp with Advanced Shaders off — in the game itself, for everyone, with no conflicts with total conversions. If this mod helps you, please like the thread or reply with your GPU, so the developers see how many of us there are:
+https://forum.paradoxplaza.com/forum/threads/1946916/
+
 Guide: https://steamcommunity.com/sharedfiles/filedetails/?id=3800254441 — the full settings list these mods are built around, on a 4 GB laptop GPU at 5120x1440.
 
 A compatibility patch that makes https://steamcommunity.com/sharedfiles/filedetails/?id=3800159542 and https://steamcommunity.com/sharedfiles/filedetails/?id=3800565988 work on the map of https://steamcommunity.com/sharedfiles/filedetails/?id=2962333032. Without it the two mods either do nothing under AGOT or break its terrain, depending on the load order.
